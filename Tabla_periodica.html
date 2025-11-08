@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz de la Tabla Periódica</title>
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    
+    a {
+      text-decoration: none;
+    }
+
+    body {
+      background-color: #f5f7fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container {
+      max-width: 700px;
+      margin-top: 40px;
+      background: #fff;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+    #pregunta {
+      font-size: 80px;
+      font-weight: bold;
+      color: #0b3954;
+      margin: 20px 0;
+    }
+    #respuesta {
+      font-size: 22px;
+      color: #2a7a2e;
+      display: none;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      text-align: center;
+      color: #666;
+    }
+    img {
+      max-width: 500px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container text-center">
+    <img src="https://ujat.online/wp-content/uploads/2023/01/634-6347235_ujat-logo-png-universidad-jurez-autnoma-de-tabasco-1024x296.png" alt="Logo de la Universidad">
+
+    <h2 class="mb-4">Quiz de la Tabla Periódica</h2>
+
+    <div class="mb-3">
+      <label class="form-label">Desde:</label>
+      <input type="number" id="desde" value="1" min="1" max="118" class="form-control d-inline-block w-auto">
+      <label class="form-label">Hasta:</label>
+      <input type="number" id="hasta" value="10" min="1" max="118" class="form-control d-inline-block w-auto">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Mostrar:</label>
+      <select id="modo" class="form-select d-inline-block w-auto">
+        <option value="simbolo">Símbolo</option>
+        <option value="nombre">Nombre</option>
+        <option value="numero">Número atómico</option>
+      </select>
+      <button class="btn btn-primary ms-2" onclick="iniciar()">Iniciar</button>
+    </div>
+
+    <div id="pregunta">—</div>
+    <div id="respuesta"></div>
+    <p id="progreso" class="text-muted"></p>
+
+    <div class="mt-3">
+      <button class="btn btn-outline-secondary" onclick="anterior()">Anterior</button>
+      <button class="btn btn-primary" onclick="siguiente()">Siguiente</button>
+      <button class="btn btn-outline-success" onclick="mostrarRespuesta()">Mostrar respuesta</button>
+      <button class="btn btn-outline-dark" onclick="mezclar()">Re-mezclar</button>
+    </div>
+  </div>
+<div style="text-align: center; margin-top: 30px;">
+  <h4>Síguenos en nuestras redes sociales</h4>
+  <div style="font-size: 28px; margin-top: 10px;">
+    <a href="https://www.facebook.com/ujat.mx" target="_blank" style="color: #3b5998; margin: 0 10px;">
+      <i class="fab fa-facebook"></i>
+    </a>
+    <a href="https://x.com/UJAT" target="_blank" style="color: #000; margin: 0 10px;">
+      <i class="fab fa-x-twitter"></i>
+    </a>
+    <a href="https://www.youtube.com/user/UJATmx" target="_blank" style="color: #ff0000; margin: 0 10px;">
+      <i class="fab fa-youtube"></i>
+    </a>
+    <a href="https://www.instagram.com/ujat/" target="_blank" style="color: #E1306C; margin: 0 10px;">
+      <i class="fab fa-instagram"></i>
+    </a>
+  </div>
+</div>
+
+  <footer>
+    © 2025 — Derechos reservados. Universidad Juárez Autónoma De Tabasco.
+  </footer>
+
+  <script>
+    const elementos = [
+      {numero: 1, simbolo: "H", nombre: "Hidrógeno"},
+      {numero: 2, simbolo: "He", nombre: "Helio"},
+      {numero: 3, simbolo: "Li", nombre: "Litio"},
+      {numero: 4, simbolo: "Be", nombre: "Berilio"},
+      {numero: 5, simbolo: "B", nombre: "Boro"},
+      {numero: 6, simbolo: "C", nombre: "Carbono"},
+      {numero: 7, simbolo: "N", nombre: "Nitrógeno"},
+      {numero: 8, simbolo: "O", nombre: "Oxígeno"},
+      {numero: 9, simbolo: "F", nombre: "Flúor"},
+      {numero: 10, simbolo: "Ne", nombre: "Neón"},
+      {numero: 11, simbolo: "Na", nombre: "Sodio"},
+      {numero: 12, simbolo: "Mg", nombre: "Magnesio"},
+      {numero: 13, simbolo: "Al", nombre: "Aluminio"},
+      {numero: 14, simbolo: "Si", nombre: "Silicio"},
+      {numero: 15, simbolo: "P", nombre: "Fósforo"},
+      {numero: 16, simbolo: "S", nombre: "Azufre"},
+      {numero: 17, simbolo: "Cl", nombre: "Cloro"},
+      {numero: 18, simbolo: "Ar", nombre: "Argón"},
+      {numero: 19, simbolo: "K", nombre: "Potasio"},
+      {numero: 20, simbolo: "Ca", nombre: "Calcio"},
+      {numero: 21, simbolo: "Sc", nombre: "Escandio"},
+      {numero: 22, simbolo: "Ti", nombre: "Titanio"},
+      {numero: 23, simbolo: "V", nombre: "Vanadio"},
+      {numero: 24, simbolo: "Cr", nombre: "Cromo"},
+      {numero: 25, simbolo: "Mn", nombre: "Manganeso"},
+      {numero: 26, simbolo: "Fe", nombre: "Hierro"},
+      {numero: 27, simbolo: "Co", nombre: "Cobalto"},
+      {numero: 28, simbolo: "Ni", nombre: "Níquel"},
+      {numero: 29, simbolo: "Cu", nombre: "Cobre"},
+      {numero: 30, simbolo: "Zn", nombre: "Zinc"},
+      {numero: 31, simbolo: "Ga", nombre: "Galio"},
+      {numero: 32, simbolo: "Ge", nombre: "Germanio"},
+      {numero: 33, simbolo: "As", nombre: "Arsénico"},
+      {numero: 34, simbolo: "Se", nombre: "Selenio"},
+      {numero: 35, simbolo: "Br", nombre: "Bromo"},
+      {numero: 36, simbolo: "Kr", nombre: "Kriptón"},
+      {numero: 37, simbolo: "Rb", nombre: "Rubidio"},
+      {numero: 38, simbolo: "Sr", nombre: "Estroncio"},
+      {numero: 39, simbolo: "Y", nombre: "Itrio"},
+      {numero: 40, simbolo: "Zr", nombre: "Circonio"},
+      {numero: 41, simbolo: "Nb", nombre: "Niobio"},
+      {numero: 42, simbolo: "Mo", nombre: "Molibdeno"},
+      {numero: 43, simbolo: "Tc", nombre: "Tecnecio"},
+      {numero: 44, simbolo: "Ru", nombre: "Rutenio"},
+      {numero: 45, simbolo: "Rh", nombre: "Rodio"},
+      {numero: 46, simbolo: "Pd", nombre: "Paladio"},
+      {numero: 47, simbolo: "Ag", nombre: "Plata"},
+      {numero: 48, simbolo: "Cd", nombre: "Cadmio"},
+      {numero: 49, simbolo: "In", nombre: "Indio"},
+      {numero: 50, simbolo: "Sn", nombre: "Estaño"},
+      {numero: 51, simbolo: "Sb", nombre: "Antimonio"},
+      {numero: 52, simbolo: "Te", nombre: "Telurio"},
+      {numero: 53, simbolo: "I", nombre: "Yodo"},
+      {numero: 54, simbolo: "Xe", nombre: "Xenón"},
+      {numero: 55, simbolo: "Cs", nombre: "Cesio"},
+      {numero: 56, simbolo: "Ba", nombre: "Bario"},
+      {numero: 57, simbolo: "La", nombre: "Lantano"},
+      {numero: 58, simbolo: "Ce", nombre: "Cerio"},
+      {numero: 59, simbolo: "Pr", nombre: "Praseodimio"},
+      {numero: 60, simbolo: "Nd", nombre: "Neodimio"},
+      {numero: 61, simbolo: "Pm", nombre: "Prometio"},
+      {numero: 62, simbolo: "Sm", nombre: "Samario"},
+      {numero: 63, simbolo: "Eu", nombre: "Europio"},
+      {numero: 64, simbolo: "Gd", nombre: "Gadolinio"},
+      {numero: 65, simbolo: "Tb", nombre: "Terbio"},
+      {numero: 66, simbolo: "Dy", nombre: "Disprosio"},
+      {numero: 67, simbolo: "Ho", nombre: "Holmio"},
+      {numero: 68, simbolo: "Er", nombre: "Erbio"},
+      {numero: 69, simbolo: "Tm", nombre: "Tulio"},
+      {numero: 70, simbolo: "Yb", nombre: "Iterbio"},
+      {numero: 71, simbolo: "Lu", nombre: "Lutecio"},
+      {numero: 72, simbolo: "Hf", nombre: "Hafnio"},
+      {numero: 73, simbolo: "Ta", nombre: "Tantalio"},
+      {numero: 74, simbolo: "W", nombre: "Wolframio"},
+      {numero: 75, simbolo: "Re", nombre: "Renio"},
+      {numero: 76, simbolo: "Os", nombre: "Osmio"},
+      {numero: 77, simbolo: "Ir", nombre: "Iridio"},
+      {numero: 78, simbolo: "Pt", nombre: "Platino"},
+      {numero: 79, simbolo: "Au", nombre: "Oro"},
+      {numero: 80, simbolo: "Hg", nombre: "Mercurio"},
+      {numero: 81, simbolo: "Tl", nombre: "Talio"},
+      {numero: 82, simbolo: "Pb", nombre: "Plomo"},
+      {numero: 83, simbolo: "Bi", nombre: "Bismuto"},
+      {numero: 84, simbolo: "Po", nombre: "Polonio"},
+      {numero: 85, simbolo: "At", nombre: "Astato"},
+      {numero: 86, simbolo: "Rn", nombre: "Radón"},
+      {numero: 87, simbolo: "Fr", nombre: "Francio"},
+      {numero: 88, simbolo: "Ra", nombre: "Radio"},
+      {numero: 89, simbolo: "Ac", nombre: "Actinio"},
+      {numero: 90, simbolo: "Th", nombre: "Torio"},
+      {numero: 91, simbolo: "Pa", nombre: "Protactinio"},
+      {numero: 92, simbolo: "U", nombre: "Uranio"},
+      {numero: 93, simbolo: "Np", nombre: "Neptunio"},
+      {numero: 94, simbolo: "Pu", nombre: "Plutonio"},
+      {numero: 95, simbolo: "Am", nombre: "Americio"},
+      {numero: 96, simbolo: "Cm", nombre: "Curio"},
+      {numero: 97, simbolo: "Bk", nombre: "Berkelio"},
+      {numero: 98, simbolo: "Cf", nombre: "Californio"},
+      {numero: 99, simbolo: "Es", nombre: "Einsteinio"},
+      {numero: 100, simbolo: "Fm", nombre: "Fermio"},
+      {numero: 101, simbolo: "Md", nombre: "Mendelevio"},
+      {numero: 102, simbolo: "No", nombre: "Nobelio"},
+      {numero: 103, simbolo: "Lr", nombre: "Lawrencio"},
+      {numero: 104, simbolo: "Rf", nombre: "Rutherfordio"},
+      {numero: 105, simbolo: "Db", nombre: "Dubnio"},
+      {numero: 106, simbolo: "Sg", nombre: "Seaborgio"},
+      {numero: 107, simbolo: "Bh", nombre: "Bohrio"},
+      {numero: 108, simbolo: "Hs", nombre: "Hassio"},
+      {numero: 109, simbolo: "Mt", nombre: "Meitnerio"},
+      {numero: 110, simbolo: "Ds", nombre: "Darmstadtio"},
+      {numero: 111, simbolo: "Rg", nombre: "Roentgenio"},
+      {numero: 112, simbolo: "Cn", nombre: "Copernicio"},
+      {numero: 113, simbolo: "Nh", nombre: "Nihonio"},
+      {numero: 114, simbolo: "Fl", nombre: "Flerovio"},
+      {numero: 115, simbolo: "Mc", nombre: "Moscovio"},
+      {numero: 116, simbolo: "Lv", nombre: "Livermorio"},
+      {numero: 117, simbolo: "Ts", nombre: "Tenesino"},
+      {numero: 118, simbolo: "Og", nombre: "Oganesón"}
+    ];
+
+    let lista = [];
+    let indice = 0;
+    let modo = "simbolo";
+
+    function iniciar() {
+      const desde = parseInt(document.getElementById("desde").value);
+      const hasta = parseInt(document.getElementById("hasta").value);
+      modo = document.getElementById("modo").value;
+
+      lista = elementos.filter(e => e.numero >= desde && e.numero <= hasta);
+      mezclarArray(lista);
+      indice = 0;
+      mostrar();
+    }
+
+    function mezclarArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function mostrar() {
+      if (lista.length === 0) return;
+      const e = lista[indice];
+      let texto = "";
+
+      if (modo === "simbolo") texto = e.simbolo;
+      else if (modo === "nombre") texto = e.nombre;
+      else texto = e.numero;
+
+      document.getElementById("pregunta").textContent = texto;
+      document.getElementById("respuesta").style.display = "none";
+      document.getElementById("progreso").textContent = `${indice + 1} / ${lista.length}`;
+    }
+
+    function siguiente() {
+      if (indice < lista.length - 1) {
+        indice++;
+        mostrar();
+      }
+    }
+
+    function anterior() {
+      if (indice > 0) {
+        indice--;
+        mostrar();
+      }
+    }
+
+    function mezclar() {
+      if (lista.length > 0) {
+        mezclarArray(lista);
+        indice = 0;
+        mostrar();
+      }
+    }
+
+    function mostrarRespuesta() {
+      if (lista.length === 0) return;
+      const e = lista[indice];
+      const texto = `${e.nombre} — N.º ${e.numero}`;
+      document.getElementById("respuesta").textContent = texto;
+      document.getElementById("respuesta").style.display = "block";
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowRight") siguiente();
+      if (e.key === "ArrowLeft") anterior();
+      if (e.key === " ") mostrarRespuesta();
+    });
+  </script>
+
+</body>
+</html>
